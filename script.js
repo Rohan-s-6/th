@@ -1,15 +1,19 @@
+// Your UPI details
 const upiId = "tharunrn@ybl";
 const payeeName = "Tharun R N";
 
-// Attach UPI links dynamically
-document.querySelectorAll(".product").forEach((product, index) => {
-  const amount = product.querySelector("strong").innerText.trim();
-  const button = product.querySelector(".buy-btn");
+// Buy Now function
+function buyNow(button) {
+  const productDiv = button.closest(".product");
+  const amount = productDiv.querySelector("strong").innerText.replace(/[^\d.]/g, "").trim();
 
   // Build UPI link
   const upiLink = upi://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR;
 
-  // Set href directly
-  button.setAttribute("href", upiLink);
-  button.setAttribute("target", "_blank");
-});
+  // If mobile → open UPI app, else show QR code alert
+  if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+    window.location.href = upiLink;
+  } else {
+    alert(Scan this QR from your phone to pay ₹${amount}:\nUPI ID: ${upiId});
+  }
+}
